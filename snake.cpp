@@ -1,11 +1,7 @@
-﻿#include <graphics.h>      // 引用图形库头文件
+#include <graphics.h>      // 引用图形库头文件
 #include<stdio.h>
 #include<conio.h>
 #include<stdlib.h>
-#include<Windows.h>
-#include<mmsystem.h>
-#pragma comment (lib,"winmm.lib")   //媒体库文件
-#define IDR_MP31
 struct SNAKE {   //蛇的速度，方向，大小
     int speed;
     int dirct;
@@ -31,14 +27,13 @@ enum {       //方向
 struct node point[snake_num];
 struct SNAKE snake;
 struct DOT dot;
-
 void snakeattribute() {   //设置蛇的初始属性 ,点的初始位置
     snake.size = 4;
     snake.speed = 10;
     snake.dirct = RIGHT;
     srand(GetTickCount());
-    dot.x = rand() % (WINDOW_SIZE_LENGTH / 10 - 1) * 10;
-    dot.y = rand() % (WINDOW_SIZE_WEITH / 10 - 1) * 10;
+    dot.x = rand() % (WINDOW_SIZE_LENGTH / 10 - 2) * 10+10;
+    dot.y = rand() % (WINDOW_SIZE_WEITH / 10 - 2) * 10+10;
     for (int i = 0; i <snake.size; i++) {
         point[i].x = 50 - i * 10;
         point[i].y = 10;
@@ -56,11 +51,16 @@ void dorw() {   //绘制蛇和点
     cleardevice();
     setfillcolor(BLUE);   //设置蛇的颜色
     for (int i = 0; i < snake.size; i++) {
-        solidcircle(point[i].x, point[i].y, 5);   // 画圆，半径 5
-        
+        solidcircle(point[i].x, point[i].y, 5);   // 画圆，半径 5        
     }
     setfillcolor(RED);   //设置点的颜色
     solidcircle(dot.x, dot.y, 5);
+    for (int x = 5; x < WINDOW_SIZE_LENGTH; x += 10) {    //画网格
+        line(x, 5, x, WINDOW_SIZE_WEITH-5);
+    }
+    for (int y = 5; y < WINDOW_SIZE_WEITH; y += 10) {
+        line(5, y, WINDOW_SIZE_LENGTH-5, y);
+    }
     EndBatchDraw();
 }
 void snakemove() {
@@ -126,8 +126,8 @@ void dotposition() {   //随机点位置
     if (point[0].x == dot.x && point[0].y == dot.y) {
         snake.size++;
         do {
-            dot.x = rand() % (WINDOW_SIZE_LENGTH/10-1) * 10;      //不超过窗口最大长度
-            dot.y = rand() % (WINDOW_SIZE_WEITH/10-1) * 10;     //不超过窗口最大宽度
+            dot.x = rand() % (WINDOW_SIZE_LENGTH/10-2) * 10+10;      //不超过窗口最大长度
+            dot.y = rand() % (WINDOW_SIZE_WEITH/10-2) * 10+10;     //不超过窗口最大宽度
         } while (isprime());
     }
 }
@@ -151,9 +151,6 @@ int score() {
 }
 int main()
 {
-//   mciSendString("open C:/vistualstdiofile/snake/music/Vanished.mp3 Alias BGM", 0, 0, 0);
-//   mciSendString("play BGM repeat", 0, 0, 0);
-//    (PlaySound(MAKEINTRESOURCE(IDR_MP31), NULL, SND_RESOURCE));
     snakeattribute();
     setingame();    
     while (1)
